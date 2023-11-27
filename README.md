@@ -2,6 +2,8 @@
 
 
 ---
+
+---
 title: "CJ Geeza Midterm"
 author: "CJ Geeza"
 format: html
@@ -22,6 +24,7 @@ Data from a single CMJ performed by a 28 year old recreational hockey player was
 rm(list=ls())
 
 library(ggplot2)
+library(plotly)
 
 data <-read.csv("CJ CMJ-Countermovement Jump-2022.09.02-10.33.20-Trial1 - CJ CMJ-Countermovement Jump-2022.09.02-10.33.20-Trial1.csv",
                 skip=9)
@@ -140,15 +143,15 @@ landing_plot_pct_diff <- ggplot(landing_plot, aes(x=Time, y= pct_diff)) + geom_p
 ## Results
 
 ```{r}
-plot_left
+ggplotly(plot_left)
 
-plot_right
+ggplotly(plot_right)
 
-plot_both
+ggplotly(plot_both)
 
-plot_pct_diff
+ggplotly(plot_pct_diff)
 
-landing_plot_pct_diff
+ggplotly(landing_plot_pct_diff)
 ```
 
 ```{r}
@@ -200,9 +203,7 @@ The subject displayed average asymmetries greater than 10% during the Standing(1
 References
 
 1.  Bishop, C., Turner, A., & Read, P. (2018). Effects of inter-limb asymmetries on physical and sports performance: A systematic review. Journal of sports sciences, 36(10), 1135-1144.
-2.  Noyes, F. R., Barber, S. D., & Mangine, R. E. (1991). Abnormal lower limb
-    symmetry determined by function hop tests after anterior cruciate
-    ligament rupture. The American Journal of Sports Medicine, 19, 513--
+2.  Noyes, F. R., Barber, S. D., & Mangine, R. E. (1991). Abnormal lower limb symmetry determined by function hop tests after anterior cruciate ligament rupture. The American Journal of Sports Medicine, 19, 513--
     518. doi:10.1177/036354659101900518
 3.  Bini, R. R., & Hume, P. A. (2015). Relationship between pedal force asymmetry and performance in cycling time trial. Journal of Sports Medicine and Physical Fitness, 55, 898--982.
 4.  Morouco, P. G., Marinho, D. A., Fernandes, R. J., & Marques, M. C. (2015). Quantification of upper limb kinetic asymmetries in front crawl swim- ming. Human Movement Science, 40, 185--192. doi:10.1016/j. humov.2014.12.012 
