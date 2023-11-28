@@ -44,7 +44,7 @@ mean(is.na(data$Z.Right))
 
 
 
-```{r setup, message=FALSE, echo=FALSE, warning=FALSE}
+```{r}
 
 library(data.table)
 library(tidyverse)
