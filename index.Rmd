@@ -1,5 +1,5 @@
 ---
-title: "PM566 Final Project"
+title: "Limb Asymmetry During a Single Counter-Movement Jump"
 author: "CJ"
 output: 
     html_document:
@@ -17,10 +17,12 @@ Force production asymmetry between limbs is often used as a predictor of future 
 
 The counter-movement jump (CMJ) is divided into 5 phases with different biomechanical demands: Unweighing, Braking, Propulsion, Flight, and Landing. This project aimed to calculate the average asymmetry between limbs during each phase, as well as visualize the change in asymmetry across the course of the jump. By relating the asymmetry score to the phase being performed, corrective exercise mimicking the demands of that phase may be implemented in an attempt to restore symmetry.
 
+Data from a single CMJ performed by a 28 year old recreational hockey player was collected on a Vault force plate at a sampling rate of 1000 Hz at the USC Clinical Exercise Research Center on September 2, 2022.
 
 
 
-```{r}
+
+```{r, echo=FALSE}
 rm(list=ls())
 
 library(ggplot2)
@@ -29,20 +31,19 @@ library(readr)
 
 data <-read.csv("CJ CMJ-Countermovement Jump-2022.09.02-10.33.20-Trial1 - CJ CMJ-Countermovement Jump-2022.09.02-10.33.20-Trial1.csv",
                 skip=9)
-mean(is.na(data$Z.Left))
-mean(is.na(data$Z.Right))
+
 ```
 
 
 
-```{r}
+```{r, echo=FALSE}
 # Change time to normalize to 0
 data$Time <- data$Time - min(data$Time)
 ```
 
 
 
-```{r}
+```{r, echo=FALSE}
 T <- nrow(data)
 # re-arrange data to be able to plot left leg against right leg
 data_tidy <- data.frame(Time=data$Time, Force=data$Z.Left, Leg="Left")
@@ -53,32 +54,17 @@ data_tidy <- rbind(data_tidy, data.frame(Time=data$Time, Force=data$Z.Right,
 # Create column for difference between legs
 data$difference <- data$Z.Right - data$Z.Left
 
-plot_left <- ggplot(data, aes(x=Time, y=Z.Left)) + geom_point() +
-  ylab("Force from Left Leg (Newtons)") + xlab("Time (seconds)")
 
-
-
-
-plot_right <- ggplot(data, aes(x=Time, y=Z.Right)) + geom_point() +
-  ylab("Force from Right Leg (Newtons)") + xlab("Time (seconds)")
 
 plot_both <- ggplot(data_tidy, aes(x=Time, y=Force, color=Leg)) + geom_line() +
-  ylab("Force (Newtons)") + xlab("Time (seconds)") 
-```
-
-
-```{r}
-# Acceleration plot
-
-plot_acc <- ggplot(data, aes(x=Time, y=Acceleration)) + geom_point() +
-  ylab("Acceleration (m/s^2)") + xlab("Time (seconds)") 
-
-plot_acc
+  ylab("Force (Newtons)") + xlab("Time (seconds)") + ggtitle("Force Produced in Right and Left Leg over Time")
 ```
 
 
 
-```{r}
+
+
+```{r, echo=FALSE}
 # Find standing phase: acceleration 0
 # Looks like rows 1 - 592
 # data[2100:2600, c("Time", "Acceleration")]
@@ -110,7 +96,7 @@ landing_inds <- 2155:T
 
 
 
-```{r}
+```{r, echo=FALSE}
 # Calculate the percentage difference between force from left and right legs
 # in the z direction at each time
 data$pct_diff <- (data$Z.Left - data$Z.Right)/pmax(data$Z.Left, data$Z.Right)*100
@@ -133,30 +119,28 @@ avg_landing_asymmetry <- mean(data[landing_inds, "abs_pct_diff"])
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 df_plot <- data[c(standing_inds, unweighting_inds, braking_inds,
                   propulsion_inds), ]
 
 plot_pct_diff <- ggplot(df_plot, aes(x=Time, y= pct_diff)) + geom_point() +
   geom_hline(yintercept=10, color="red", linetype = "dashed") +
   geom_hline(yintercept=-10, color="red", linetype = "dashed") +
-  ylab("Percent Difference") + ggtitle("Percent Asymmetry in Leg Force Over Time")
+  ylab("Percent Difference") + ggtitle("Percent Asymmetry in Leg Force Over Time (Before Landing)")
 
 landing_plot <- data[landing_inds,]
 
 landing_plot_pct_diff <- ggplot(landing_plot, aes(x=Time, y= pct_diff)) + geom_point() +
   geom_hline(yintercept=10, color="red", linetype = "dashed") +
   geom_hline(yintercept=-10, color="red", linetype = "dashed") +
-  ylab("Percent Difference") + ggtitle("Percent Asymmetry in Leg Force Over Time")
+  ylab("Percent Difference") + ggtitle("Percent Asymmetry in Leg Force Over Time During Landing")
 ```
 
 
 
-```{r}
+```{r, echo=FALSE}
 ggplotly(plot_diff)
-ggplotly(plot_left)
 
-ggplotly(plot_right)
 
 ggplotly(plot_both)
 
@@ -165,47 +149,7 @@ ggplotly(plot_pct_diff)
 ggplotly(landing_plot_pct_diff)
 ```
 
-```{r}
-# Average absolute asymmetry during standing phase:
-print(paste(round(avg_standing_asymmetry, 4), "%", sep=""))
 
-# Average absolute asymmetry during unweighting phase:
-print(paste(round(avg_unweighting_asymmetry, 4), "%", sep=""))
-
-# Average absolute asymmetry during breaking phase:
-print(paste(round(avg_braking_asymmetry, 4), "%", sep=""))
-
-# Average absolute asymmetry during propulsion phase:
-print(paste(round(avg_propulsion_asymmetry, 4), "%", sep=""))
-
-# Average absolute asymmetry during braking phase
-print(paste(round(avg_landing_asymmetry, 4), "%", sep=""))
-```
-
-```{r}
-# Summary statistics
-print(summary(data[standing_inds, "abs_pct_diff"]))
-print(sd(data[standing_inds, "abs_pct_diff"]))
-
-print(summary(data[standing_inds, "Z.Left"]))
-print(sd(data[standing_inds, "Z.Left"]))
-
-# Unweighting
-print(summary(data[unweighting_inds, "abs_pct_diff"]))
-print(sd(data[unweighting_inds, "abs_pct_diff"]))
-
-# Breaking
-print(summary(data[braking_inds, "abs_pct_diff"]))
-print(sd(data[braking_inds, "abs_pct_diff"]))
-
-# Propulsion
-print(summary(data[propulsion_inds, "abs_pct_diff"]))
-print(sd(data[propulsion_inds, "abs_pct_diff"]))
-
-# Landing
-avg_landing_asymmetry <- mean(data[landing_inds, "abs_pct_diff"])
-print(paste(round(avg_landing_asymmetry, 4), "%", sep=""))
-```
 
 
 
