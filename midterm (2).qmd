@@ -1,5 +1,5 @@
 ---
-title: "CJ Geeza Midterm"
+title: "CMJ Asymmetry Report"
 author: "CJ Geeza"
 format: pdf
 editor: visual
@@ -15,7 +15,7 @@ The counter-movement jump is divided into 5 phases with different biomechanical 
 
 Data from a single CMJ performed by a 28 year old recreational hockey player was collected on a Vault force plate at a sampling rate of 1000 Hz at the USC Clinical Exercise Research Center on September 2, 2022. The data was exported to a csv file, and initially included 3136 observations and 22 variables. After importing the data in R using the function `read.csv`, the combined function `mean(is.na)` was used to confirm no missing data for the variables representing the force produced in the Z direction for the left and right legs.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE }
 rm(list=ls())
 
 library(ggplot2)
@@ -168,7 +168,7 @@ plot_pct_diff
 landing_plot_pct_diff
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, results=FALSE}
 # Average absolute asymmetry during standing phase:
 print(paste(round(avg_standing_asymmetry, 4), "%", sep=""))
 
@@ -185,7 +185,7 @@ print(paste(round(avg_propulsion_asymmetry, 4), "%", sep=""))
 print(paste(round(avg_landing_asymmetry, 4), "%", sep=""))
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, results=FALSE}
 # Summary statistics
 print(summary(data[standing_inds, "abs_pct_diff"]))
 print(sd(data[standing_inds, "abs_pct_diff"]))
@@ -212,7 +212,7 @@ print(paste(round(avg_landing_asymmetry, 4), "%", sep=""))
 
 ## Conclusion
 
-The subject displayed average asymmetries greater than 10% during the Standing(11.63 %), Unweighing (11.45%), and Landing phases (17.85%). Interestingly, the subject\'s asymmetry decreases as they transition from passive phases (Standing and Unweighing) to power absorption and generation phases (Braking and Propulsion). The large difference between takeoff and landing symmetry coincide with results from Cone et al. Based on these results, the subject should use exercise strategies that target static balance and landing mechanics in order to reduce risk for future injury.
+The subject displayed average asymmetries greater than 10% during the Standing(11.63 %), Unweighing (11.45%), and Landing phases (17.85%). Interestingly, the subject's asymmetry decreases as they transition from passive phases (Standing and Unweighing) to power absorption and generation phases (Braking and Propulsion). The large difference between takeoff and landing symmetry coincide with results from Cone et al. Based on these results, the subject should use exercise strategies that target static balance and landing mechanics in order to reduce risk for future injury.
 
 References
 
